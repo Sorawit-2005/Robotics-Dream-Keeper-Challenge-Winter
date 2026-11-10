@@ -1,0 +1,3 @@
+Installed the Ultralytics YOLO package on the RDK X5 board and executed real-time object detection using the following command:   
+Bashyolo predict model=yolov8n.pt source=0 show=True
+The model successfully launched the live preview window, accurately rendering bounding boxes and class labels. The execution ran smoothly, maintaining a stable frame rate of around 30 FPS on the board's display.
