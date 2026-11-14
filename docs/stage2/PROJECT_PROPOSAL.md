@@ -1,6 +1,6 @@
 # Project Proposal: GuardianBot — AI-Powered Home Security & Monitoring Robot
 
-**Developer:** life (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)  
+**Developer:** sorawit (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)  
 **Hardware Platform:** D-Robotics RDK X5  
 **Stage:** Stage 2 — Build Challenge (Concept and Application Design)
 
