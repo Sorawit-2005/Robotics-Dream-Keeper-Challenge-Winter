@@ -4,7 +4,7 @@
 - **Category:** Smart Life Robotics
 - **Compute Platform:** D-Robotics RDK X5 (Edge AI / BPU)
 - **Robot Base:** MasterPi AI Vision Robot Arm with Mecanum Wheels
-- **Developer:** sorawit (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)
+- **Developer:** Sorawit Namwongsa (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)
 
 ---
 

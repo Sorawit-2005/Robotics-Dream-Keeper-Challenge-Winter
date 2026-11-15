@@ -247,7 +247,7 @@ The robot's planned capabilities will be updated as individual modules are imple
 
 ## Developer
 
-**Sorawit**
+**Sorawit Namwongsa**
 
 Kasetsart University  
 Chalermphrakiat Sakonnakhon Province Campus

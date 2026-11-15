@@ -1,6 +1,6 @@
 # RDK Challenge Winter - Stage 1 (Ignite) 🚀
 
-**Developer:** sorawit (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)
+**Developer:** Sorawit Namwongsa (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)
 
 ## 📌 Project Overview
 This repository contains the documentation, logs, and evidence for Stage 1 of the RDK Challenge Winter using the **RDK X5** board.
