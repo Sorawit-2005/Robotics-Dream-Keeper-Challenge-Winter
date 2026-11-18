@@ -224,6 +224,9 @@ The directory structure may evolve as development progresses.
 
 ## Project Documentation
 
+- **[- **[Stage 1 Report](stages/state%201/STAGE1_IGNITE.md)** — Board bring-up, camera test, and YOLO evidence.
+Stage 2 Checklist](docs/stage2/CHECKLIST.md)** — Task checklist, current progress, and proposed repository layout.
+
 Additional project documentation will be maintained in the repository:
 
 - **[GUARDIANBOT_PROJECT.md](GUARDIANBOT_PROJECT.md)** — Detailed project concept, hardware inventory, planned capabilities, and engineering considerations.

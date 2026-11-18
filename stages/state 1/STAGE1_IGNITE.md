@@ -1,40 +1,48 @@
-# RDK Challenge Winter - Stage 1 (Ignite) 🚀
+# Stage 1 — Ignite | GuardianBot
 
-**Developer:** Sorawit Namwongsa (Computer Science, Kasetsart University Chalermphrakiat Sakonnakhon Province Campus)
+**Developer:** Sorawit Namwongsa, Kasetsart University Chalermphrakiat Sakon Nakhon Province Campus
 
-## 📌 Project Overview
-This repository contains the documentation, logs, and evidence for Stage 1 of the RDK Challenge Winter using the **RDK X5** board.
+**Platform:** D-Robotics RDK X5 with D-Robotics Ubuntu 22.04 and a USB camera
 
-## 🖥️ Hardware Setup
-* **Board:** RDK X5
-* **OS:** Ubuntu 22.04 (D-Robotics)
-* **Camera:** USB Camera (`/dev/video0`)
----
+## Challenge 1 — Board Bring-Up
 
+The RDK X5 system image was flashed to a microSD card according to the project notes. The board booted and accepted SSH commands from the development PC over Wi-Fi using Bitvise SSH Client.
 
+- [Booted D-Robotics desktop](Challenge%201%20%E2%80%94%20Board%20Bring-Up/board_bringup.png.png)
+- [Active SSH session and terminal output](Challenge%201%20%E2%80%94%20Board%20Bring-Up/challenge1_ssh_connection.png.jpg)
 
-## 📋 Stage 1 Tasks & Execution
+Evidence to add: successful flash screen or log, image build and flashing tool used, and confirmation of internet access from the board.
 
-## 🛠️ Challenge Execution Details
+## Challenge 2 — Sensor Explorer
 
-### 1. Challenge 1 — Board Bring-Up
+The USB camera was available through V4L2 at `/dev/video0`. The `cheese` preview showed a graphics driver error. The camera was then previewed through FFmpeg's `ffplay`:
 
-* Flashed OS to microSD card and booted the RDK X5 board.
-* Connected via SSH over Wi-Fi (`wlan0` IP: `192.168.1.100`)
+```bash
+ffplay -f v4l2 -input_format mjpeg -video_size 640x480 /dev/video0 -loglevel quiet
+```
 
-* **Description:** Successfully flashed the OS image onto the RDK X5 board. Established remote access and management via SSH from the development computer using **PuTTY** and **Bitvise SSH Client**.
-* **Evidence:** (Attach your successful SSH connection screenshot)
+- [Working USB camera image](Challenge%202%20%E2%80%94%20Sensor%20Explorer/sensor_camera_live.jpg.png)
+- [Initial camera preview error](Challenge%202%20%E2%80%94%20Sensor%20Explorer/challenge2_camera_error.jpg.png)
 
-### 2. Challenge 2 — Sensor Explorer
-* **Description:** Connected a USB camera to the RDK X5 board (`/dev/video0`)[cite: 1].
-* **Issues Encountered:** Initially, opening the camera preview via the `cheese` application failed despite checking APT packages (due to desktop graphics driver constraints with `vs-drm` on the ARM board).
-* **Solution:** Resolved the issue by using `ffplay` to fetch the live video stream directly via the V4L2 interface:
-  ```bash
-  ffplay -f v4l2 -input_format mjpeg -video_size 640x480 /dev/video0 -loglevel quiet
+## Challenge 3 — First AI Task
 
-### 3. Challenge 3 — First AI TaskDescription 
-* **Installed the Ultralytics YOLO package on the RDK X5 board and executed real-time object detection.   Command 
+The selected on-board AI workload was YOLOv8n object detection. It produced labeled detection boxes from the USB camera.
 
-* **Used:Bashyolo predict model=yolov8n.pt source=0 show=True
+```bash
+yolo predict model=yolov8n.pt source=0 show=True
+```
 
-* **Result: The model successfully launched the live preview window, accurately rendering bounding boxes and class labels with a stable performance of around 30 FPS.Evidence: (Attach your YOLO detection preview photo or video clip)
+The log identifies the runtime as CPU on aarch64 and reports roughly 1.6 seconds of inference per frame in the visible sample. The 30 FPS entry describes the camera stream.
+
+- [YOLO detection output](Challenge%203%20%E2%80%94%20First%20AI%20Task/yolov8n_detection_result.jpg.png)
+- [YOLO command and runtime log](Challenge%203%20%E2%80%94%20First%20AI%20Task/yolov8n_terminal_log.jpg.png)
+
+## Submission checklist
+
+- [x] Collect evidence for active SSH, a working USB camera, and one AI workload.
+- [ ] Add successful flash evidence and record proof of internet access.
+- [ ] Record the tested installation commands and dependency versions for FFmpeg, Ultralytics, and PyTorch.
+- [ ] Verify RDK Studio activation and add the permalink to the Stage 1 check-in in the personal Discord challenge thread.
+- [ ] Verify the Showcase PR and review status in the official repository.
+
+[Official Stage 1 requirements](https://github.com/D-Robotics/Robotics-Dream-Keeper-Challenge-Winter/blob/main/stages/stage1-ignite.md)
