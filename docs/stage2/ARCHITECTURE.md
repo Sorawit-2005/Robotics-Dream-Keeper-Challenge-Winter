@@ -12,12 +12,14 @@ flowchart LR
     T --> D[Event rules and motion supervisor]
     S[Front range sensor] --> D
     O[Operator enable and drive request] --> D
-    D --> A[Actuator bridge and controller watchdog]
-    A --> W[Mecanum motor driver and wheels]
+    D --> A[Actuator bridge on RDK X5]
+    A --> H[Actuator controller and local watchdog]
+    H --> W[Motor driver and Mecanum wheels]
     D --> E[Local event logger]
     P --> E
     E --> L[Timestamped snapshot and metadata]
-    X[Physical stop] --> A
+    X[Physical stop button] --> Y[Hardware motor drive inhibit or power cutoff]
+    Y -->|Disables drive independently| W
 ```
 
 Autonomous waypoint patrol is an optional extension after validating supervised movement, safe stopping, and position estimation. Optional camera tilt is a separate, supervised extension after servo limits are verified. The front sensor protects forward approach only. Demo movement near obstacles is forward only, with lateral and reverse movement tested separately in a cleared area under supervision.
@@ -32,14 +34,14 @@ Autonomous waypoint patrol is an optional extension after validating supervised 
 | Range input | Read the front sensor through the verified controller interface | Timestamped range in meters | Invalid or stale data blocks forward motion. |
 | Supervisor | Apply enable, freshness, range and operator inputs. Confirm configured events. | Safe velocity and event records | Default to disarmed. Stop on a fault and require operator re-enable after recovery. |
 | Actuator bridge | Convert safe velocities to bounded wheel commands and relay to controller | Wheel commands and controller health | Local controller watchdog stops the wheels if upstream commands stop. Startup is stopped until enabled. |
-| Event logger | Match confirmed events to a small local frame buffer | Snapshot, timestamp, class and metadata | Report missing frames or storage failures. Continue to enforce the stop interlock independently. |
+| Event logger | Match confirmed events to a small local frame buffer | Snapshot, timestamp, class and metadata | Report missing frames or storage failures. The motion supervisor and controller continue to enforce the stop path. |
 
 ## Compute allocation
 
 - **BPU on RDK X5** runs quantized YOLO inference. Start with the official YOLO example and select the model artifact and runtime that match the installed RDK image. Record the actual model input shape separately from USB capture resolution.
 - **CPU on RDK X5** handles capture, preprocessing, decoding, tracking, ROS 2, event decisions, local storage, and motor command supervision. Detection and tracking run in separate ROS 2 nodes. Bound queues so delayed frames cannot accumulate.
 - **Actuator controller** runs motor I/O, the stop watchdog, and sensor acquisition as appropriate. This keeps the stop behavior available when the host or link fails. The physical stop independently inhibits motor drive.
-- **Off-board** no external compute is required for AI or the motion safety path. An operator laptop can send commands or view status locally. A separate Pi controller is an option if required by the MasterPi board.
+- **Off-board** no cloud compute or operator laptop is required to enforce a stop. An operator laptop can send commands or view status locally. A separate Pi controller is an option if required by the MasterPi board.
 
 ## ROS 2 node graph
 
@@ -54,7 +56,7 @@ flowchart LR
     D -->|cmd_vel/safe| A[actuator_bridge]
     A -->|controller/health| D
     D -->|events/confirmed| E
-    A --> H[Motor controller]
+    A --> H[Actuator controller and local watchdog]
 ```
 
 | Interface | Publisher → subscriber or provider | ROS 2 type | Target rate |

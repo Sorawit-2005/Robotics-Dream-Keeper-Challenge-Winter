@@ -23,7 +23,7 @@ The representative demo takes place on a level indoor floor in a clear hallway o
 - **Operating area:** Use a dry, flat floor under suitable indoor lighting. Verify wheel clearance and keep people clear of the robot's motion path.
 - **Movement:** Forward approach is the obstacle-stop test. Test lateral or reverse movement separately in a cleared area because the front range sensor covers the forward direction.
 - **Privacy:** Process raw frames on the robot. Keep event snapshots and metadata local for the baseline demo. Person detection identifies a class, without identifying individuals.
-- **Hardware readiness:** Enable drive only after verifying the controller, front range sensor, power supply, and stop behavior. The arm stays out of the baseline scope.
+- **Hardware readiness:** Enable drive only after verifying the controller, front range sensor, power supply, and stop behavior. The arm stays out of the baseline scope. Its kit revision and joint count are pending verification.
 
 ## 3. Intended Users & Interaction Model
 
@@ -31,7 +31,7 @@ The primary user is a household member or family caregiver who wants to check a 
 
 1. The operator enables drive in a cleared area and guides GuardianBot toward the inspection point.
 2. The operator observes the robot while it runs detection and tracking. A configured rule can confirm an event when a target class, such as a person, is consistently detected across frames.
-3. After the inspection, the operator reviews the saved snapshot and timestamp. If the robot encounters a blocked forward path or a range fault, the motion supervisor stops or inhibits forward movement. The operator checks the area before continuing.
+3. A blocked forward path or invalid range reading stops or inhibits forward movement. After a latched fault, the operator checks the area and re-enables drive once the fault clears. After the inspection, the operator reviews the saved snapshot and timestamp.
 
 ## 4. Hardware Compatibility & Power Architecture
 
@@ -82,7 +82,7 @@ All power connections will be verified before hardware integration.
 | --- | --- |
 | Perception | The Stage 1 USB camera provides frames for detection and tracking. The planned front range sensor reports distance ahead once its interface has been verified. |
 | Decision | The RDK X5 confirms configured events from tracked detections. It separately checks that drive is enabled and that the forward path and range data meet the motion rules. A detected person can trigger a record. A blocked forward path triggers a stop. |
-| Actuation | The verified motor controller drives the four Mecanum wheels within the tested speed limit and stops forward movement when requested by the supervisor. The event logger saves the matching snapshot and metadata locally. |
+| Actuation | The planned actuator controller drives the four Mecanum wheels within tested limits after hardware verification. It stops forward movement when requested by the supervisor. The event logger saves the matching snapshot and metadata locally. |
 
 ## 8. Innovation Compared with a Stock Demo
 

@@ -5,7 +5,7 @@ Dates below are project targets. See the [organizer timeline](https://github.com
 | Date | Planned work | Completion evidence |
 |---|---|---|
 | Nov 19–22 | Review proposal, architecture, BOM and scope. Identify MasterPi revision, sensor and power supply. | Linked documents and list of compatibility decisions or open items. |
-| Nov 23–26 | Finalize Stage 2 design and publish the four documents. | Public roadmap, proposal, architecture, engineering plan, Discord permalink and updated Showcase PR. |
+| Nov 23–26 | Finalize open BOM details, update the public design documents, and submit Stage 2. | Public roadmap, proposal, architecture, engineering plan, Discord permalink and updated Showcase PR. |
 | Nov 27–Dec 2 | Validate the official BPU path on RDK X5 and bench-test camera, range and drive interfaces in isolation. | Model/runtime record, BPU-path proof, range logs and unloaded motion/stop evidence. |
 | Dec 3–7 | Integrate ROS 2 capture, detection, tracking, event logging and motor control. Test disconnects and stop interlocks. | Reproducible launch, concurrent workloads, local event record, safe stop results. |
 | Dec 8–11 | Run repeatable bench and floor tests. Measure accuracy, FPS, event latency and final stopping clearance. | Benchmark table and results with known limitations. |

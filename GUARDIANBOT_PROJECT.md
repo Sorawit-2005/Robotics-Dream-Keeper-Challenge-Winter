@@ -11,23 +11,10 @@
 ---
 
 ## 1. Project Overview
-**GuardianBot** is an intelligent home assistant and security robot developed using Artificial Intelligence (AI) and Robotics technologies to autonomously monitor, patrol, and inspect indoor home environments.
 
-This project utilizes the **D-Robotics RDK X5** as the primary computing unit for AI workloads and the **MasterPi AI Vision Robot Arm with Mecanum Wheels** as the base robotic platform. GuardianBot uses onboard cameras and AI Vision to detect people, objects, and anomalies within designated areas. It can navigate to various inspection checkpoints, avoid obstacles, and use its robotic arm to pick up objects or adjust the camera angle to explore additional areas.
+GuardianBot is a planned mobile indoor inspection robot built around the D-Robotics RDK X5 and MasterPi chassis. The Stage 3 baseline uses BPU person and object detection, CPU tracking, local event snapshots, and supervised low-speed Mecanum movement with a forward obstacle stop. The project is in Stage 2 design.
 
-AI processing executes locally on the robot via the RDK X5, aiming to reduce reliance on cloud computing and support Edge AI operation.
-
-### 1.1 Project Objectives
-1. Develop a robot capable of inspecting indoor home environments using AI Vision.
-2. Develop a person and object detection system using AI.
-3. Develop an autonomous mobility system utilizing Mecanum Wheels.
-4. Develop an obstacle detection and avoidance system.
-5. Develop a robotic arm system capable of picking up and handling objects.
-6. Develop a camera-angle adjustment system using the robotic arm to explore surroundings.
-7. Develop an anomaly event monitoring and user alert system.
-8. Utilize the RDK X5 for onboard Edge AI processing.
-
----
+The [Stage 2 Proposal](docs/stage2/PROJECT_PROPOSAL.md) defines the demo scope and KPI targets. Autonomous waypoint patrol, arm-based camera adjustment, and a dashboard for event snapshots are optional extensions. Object pickup is future work.
 
 ## 2. Robot Capabilities
 
@@ -51,7 +38,7 @@ GuardianBot uses its camera paired with AI models to analyze the surrounding env
 > **Note:** Person detection does not imply personal identification. Facial recognition or identity verification is an additional function that requires careful consideration regarding privacy and security.
 
 ### 2.2 Autonomous Patrol
-GuardianBot can navigate to predefined inspection checkpoints.
+In the optional patrol extension, GuardianBot would navigate to predefined inspection checkpoints.
 
 **Planned Capabilities:**
 * Define inspection checkpoints (Waypoints).
@@ -63,96 +50,29 @@ GuardianBot can navigate to predefined inspection checkpoints.
 
 > **Stage 3 scope:** The baseline uses supervised low-speed Mecanum motion and a front obstacle stop. Autonomous waypoint patrol is an optional extension after motion, safe stopping, and position estimation are validated. SLAM and map generation are future work.
 
-### 2.3 Obstacle Avoidance
-Uses a Distance Sensor and visual data from the camera to inspect areas in front of or around the robot.
+### 2.3 Forward Obstacle Stop
 
-**Operating Principle:**
-1. Measure distance from obstacles.
-2. Evaluate whether an obstacle is obstructing the path.
-3. Transmit data to the control system.
-4. The robot decelerates, stops, or changes direction.
-5. Re-verify the path before resuming movement.
+For the baseline demo, the front range sensor measures distance ahead. The motion supervisor stops or inhibits forward movement when the path is blocked or the reading is invalid or stale. Test lateral and reverse movement separately in a cleared area under supervision.
 
 ### 2.4 Robotic Arm
-GuardianBot utilizes the MasterPi robotic arm featuring a 5 Degrees of Freedom (5-DOF) structure. The robotic arm serves two primary functions:
 
-**A. Object Manipulation**
-* Pick up and handle objects.
-* Relocate authorized objects.
-* Inspect objects via the camera.
-* Collaborate with AI Vision to estimate object positions.
-
-**B. Camera Adjustment**
-* Adjust camera viewing angles.
-* Tilt the camera up and down (pitch).
-* Rotate the camera to scan the area (pan/yaw).
-* Adjust viewpoints to capture additional visual evidence.
-
-> **Safety Constraint:** Object manipulation must undergo weight, size, and safety evaluation before physical actuation is executed.
+The MasterPi arm and gripper are listed in the kit inventory. The exact revision and joint count are pending confirmation on the physical unit. Camera angle adjustment is optional after verifying the servo interface and movement limits. Object pickup is future work.
 
 ### 2.5 Smart Event Monitoring
-When AI detects an event matching predefined conditions, the system executes the following sequence:
-1. Capture image frame from the camera.
-2. Process the image using AI.
-3. Classify the event type.
-4. Record the image and timestamp.
-5. Log data into the system.
-6. Alert the user via the Dashboard.
 
-### 2.6 Dashboard & Notification
-Planned system features:
-* Live Camera View
-* Robot Status
-* Patrol Status
-* Event History
-* Captured Images
-* Battery Status
-* Notification System
+1. Capture and timestamp a camera frame.
+2. Run detection on the RDK X5 BPU and track detections on the CPU.
+3. When a configured event is confirmed, save the matching snapshot and timestamped metadata locally.
 
----
+### 2.6 Dashboard & Notifications
+
+An optional dashboard can show event snapshots, timestamps, and status. Raw camera frames stay on the robot for the Stage 3 baseline. Live video streaming is a separate future idea outside the current proposal and demo scope.
 
 ## 3. Working Principle
-GuardianBot operates sequentially from data acquisition, processing, and decision-making to motion control.
 
-### 3.1 Overall Working Process
-1. **Sensing:** Acquire data from the camera and sensors.
-2. **Perception:** Analyze images and detect objects using AI.
-3. **Decision Making:** Evaluate the situation and select an appropriate response.
-4. **Motion Planning:** Plan movement trajectories.
-5. **Actuation:** Drive motors and robotic arm servos.
-6. **Monitoring:** Verify outcomes and log events.
+A nearby operator guides GuardianBot to a different viewpoint. The camera and perception pipeline can trigger a local event record when a selected class is consistently detected. In a separate forward approach test, the front range sensor prompts a controlled stop. The physical motor stop is independent of the RDK X5 software path.
 
-### 3.2 System Flow
-```mermaid
-flowchart TD
-    A[Camera & Sensors] --> B[RDK X5]
-    B --> C[AI Vision Processing]
-    C --> D[Object and Person Detection]
-    D --> E[Decision Making]
-    E --> F{Event or Obstacle?}
-    F -->|Yes| G[Event Monitoring]
-    F -->|No| H[Navigation Planning]
-    G --> I[Capture Evidence]
-    I --> J[Notification]
-    H --> K[Mecanum Motion Control]
-    H --> L[Robotic Arm Control]
-    K --> M[Environment Monitoring]
-    L --> M
-    M --> A
-```
-
-### 3.3 Example Working Scenario
-**Example:** GuardianBot detects an anomalous object indoors.
-1. In the optional patrol mode, the robot navigates to an inspection waypoint.
-2. The camera captures images of the environment.
-3. The RDK X5 processes the image feed using AI.
-4. The system detects an object requiring inspection.
-5. The system evaluates position and safety conditions.
-6. The robotic arm adjusts the camera angle to capture additional images.
-7. The system logs the event image and timestamp.
-8. The Dashboard displays the alert and information to the user.
-
-> Physical object pickup occurs only when explicitly authorized and after passing all safety checks.
+See the [Stage 2 Architecture](docs/stage2/ARCHITECTURE.md) for the data flow, module responsibilities, compute allocation, and ROS 2 interfaces.
 
 ---
 
@@ -178,34 +98,15 @@ MasterPi serves as the mechanical base for mobility and object manipulation.
 **Components:**
 * 4x Mecanum Wheels
 * 4x TT Motors
-* 5-DOF Robotic Arm
-* HD Camera
-* Ultrasonic Sensor
+* Robotic arm and gripper (revision and joint count pending confirmation)
+* Stage 1 USB camera for the baseline; kit camera compatibility pending
+* Front ultrasonic sensor planned; kit sensor presence and interface pending
 * Expansion Board
 * Battery System
 
 ### 4.3 Hardware Integration Concept
-Planned hardware interconnection concept:
 
-```text
-             GuardianBot
-                  |
-        +---------+---------+
-        |                   |
-      RDK X5             MasterPi
-        |                   |
-    AI Processing       Robot Control
-        |                   |
-   +----+----+          +---+------+
-   |         |          |          |
- Camera   AI Model    Motors    Servo
-   |                    |          |
-   +------ Communication --------+
-                  |
-          Robot Operations
-```
-
-> **Important:** Compatibility between the Expansion Board (originally designed for Raspberry Pi 5) and the RDK X5—including GPIO, UART, I2C, PWM, Voltage levels, and Drivers—must be thoroughly verified before actual hardware integration. Do not assume direct plug-and-play compatibility.
+The Stage 1 USB camera connects to the RDK X5. The RDK X5 sends bounded drive requests to a separately validated actuator controller. Confirm the MasterPi board revision, logic levels, protocol, and power requirements before choosing a controller path. The [Engineering Plan](docs/stage2/ENGINEERING_PLAN.md) records the BOM and fallback options.
 
 ---
 
@@ -316,108 +217,23 @@ GuardianBot/
 ---
 
 ## 8. Stage 2: Build — Development Plan
-**Planned Execution Window:** November 11–26, 2026
 
-* **Step 1: Project Definition**
-  * Summarize Project Overview
-  * Define Problem Statement
-  * Define Objectives
-  * Define Robot Capabilities
-  * Define Success Criteria
-* **Step 2: Hardware Analysis**
-  * Inspect RDK X5
-  * Inspect MasterPi
-  * Inspect Expansion Board
-  * Inspect Motor Driver
-  * Inspect Servo Driver
-  * Inspect Camera
-  * Inspect Ultrasonic Sensor
-  * Design Power Distribution
-  * Compile BOM (Bill of Materials)
-* **Step 3: System Architecture**
-  * Draw System Architecture Diagram
-  * Draw System Flow Diagram
-  * Design Data Flow
-  * Design Modules
-  * Define BPU / CPU Compute Allocation
-  * Design ROS 2 Node Graph
-* **Step 4: Engineering Design**
-  * Design Mecanum Motion Control
-  * Design Obstacle Avoidance
-  * Design Camera Adjustment
-  * Design Object Manipulation
-  * Design Event Monitoring
-  * Design Emergency Stop
-* **Step 5: Software Planning**
-  * Define Software Architecture
-  * Define Python Modules
-  * Select AI Model
-  * Plan Dashboard
-  * Plan Data Storage
-* **Step 6: Testing Plan**
-  * Plan AI Vision Testing
-  * Plan Motor Control Testing
-  * Plan Robotic Arm Testing
-  * Plan Obstacle Avoidance Testing
-  * Plan Power System Testing
-  * Plan System Integration Testing
-* **Step 7: Documentation & Submission**
-  * Prepare Project Documentation
-  * Prepare Hardware Diagrams
-  * Prepare Software Diagrams
-  * Set up GitHub Repository
-  * Verify Stage 2 Requirements
-  * Prepare Project Showcase
-  * Prepare Pull Request according to competition guidelines
-
----
+- [Project Proposal](docs/stage2/PROJECT_PROPOSAL.md) for the concept, baseline and optional scope, and measurable targets.
+- [Architecture](docs/stage2/ARCHITECTURE.md) for the data flow, compute plan, and ROS 2 interfaces.
+- [Engineering Plan](docs/stage2/ENGINEERING_PLAN.md) for the BOM, five risks and fallback plans, and repository layout.
+- [Roadmap](ROADMAP.md) for milestones through the final demo.
 
 ## 9. Risk Analysis
 
-| Risk | Impact | Mitigation Strategy |
-| :--- | :--- | :--- |
-| Expansion Board incompatible with RDK X5 | Unable to interface with hardware | Verify Pin Mapping and hardware interfaces |
-| Insufficient power supply | System reboots or unstable operation | Design isolated power distribution circuits |
-| Inaccurate motor control | Navigation and movement errors | Inspect Motor Driver and add Wheel Encoders |
-| AI false detections | False alarms triggered | Fine-tune AI Model and Confidence Threshold |
-| Robotic arm overload | Servo damage | Enforce payload weight limits and workspace boundaries |
-| Robot collides with obstacles | Hardware damage | Implement multi-sensor detection and Emergency Stop |
-| Overheating (High thermal load) | Degraded compute performance | Verify and install active cooling/heatsink system |
-
----
+See the [Engineering Plan](docs/stage2/ENGINEERING_PLAN.md#five-main-risks) for the current risks, triggers, mitigations, and fallbacks.
 
 ## 10. Expected Outcomes
-Upon successful development of GuardianBot, the robot is expected to achieve the following:
-1. Detect people and objects using AI Vision.
-2. Analyze indoor home environments.
-3. Navigate autonomously to designated inspection waypoints.
-4. Detect and avoid obstacles.
-5. Use the robotic arm to adjust camera angles.
-6. Use the robotic arm to pick up authorized objects.
-7. Capture and log event images and timestamps.
-8. Send alerts and notifications to users.
-9. Execute AI inference locally on the RDK X5.
 
-> **Disclaimer:** All listed capabilities represent development goals and are not yet verified test results.
-
----
+The Stage 3 demo is planned to show BPU detection with concurrent CPU tracking, a timestamped local event record, and supervised Mecanum movement with a controlled forward stop. The [Proposal](docs/stage2/PROJECT_PROPOSAL.md#9-measurable-success-targets-kpis) defines the targets to measure on the integrated robot.
 
 ## 11. Stage 2 Completion Checklist
 
-| Category | Status |
-| :--- | :--- |
-| Project Concept | Not Started |
-| Hardware Analysis | Not Started |
-| Hardware Architecture | Not Started |
-| System Architecture | Not Started |
-| AI Architecture | Not Started |
-| ROS 2 Design | Not Started |
-| Engineering Plan | Not Started |
-| BOM | Not Started |
-| Risk Analysis | Not Started |
-| Testing Plan | Not Started |
-| GitHub Documentation | Not Started |
-| Project Submission | Not Started |
+The four design documents are published in the public project repository. The remaining items are confirming open hardware and BOM details and verifying the Stage 2 community permalink and Showcase PR. Track status in the [Stage 2 checklist](docs/stage2/CHECKLIST.md).
 
 ---
 
@@ -425,7 +241,7 @@ Upon successful development of GuardianBot, the robot is expected to achieve the
 GuardianBot aims to integrate three core technological pillars:
 1. **Edge AI:** Utilize the RDK X5 and its BPU for on-device image processing and environmental analysis.
 2. **Mobile Robotics:** Utilize the MasterPi platform and Mecanum Wheels for omnidirectional indoor navigation.
-3. **Robotic Manipulation:** Utilize the 5-DOF robotic arm for object handling and active camera-angle adjustment.
+3. **Robotic Manipulation:** Evaluate the arm for optional camera angle adjustment. Object handling is future work.
 
 The ultimate goal is to develop an intelligent robot capable of perceiving, analyzing, deciding, navigating, and operating safely within a home environment.
 

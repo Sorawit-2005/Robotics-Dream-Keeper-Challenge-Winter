@@ -6,7 +6,7 @@
 The project is being developed for the **RDK Winter Challenge**, using the D-Robotics RDK X5 as its main computing platform and the MasterPi AI Vision Robot Arm as its robotic platform.
 
 > **Project Status:** Planning and system design  
-> This project is currently in the hardware preparation and system design phase. The features described below represent the planned capabilities and development goals, not completed or validated functionality.
+> The Stage 2 design documents are published. Hardware compatibility checks and submission tracking are in progress.
 
 ---
 
@@ -53,12 +53,12 @@ The following features are planned for development:
 
 | Feature | Description |
 |---|---|
-| AI Vision | Use computer vision and AI models to detect people and objects. |
+| AI Vision | Run person and object detection on the RDK X5 BPU and tracking on the CPU. |
 | Autonomous Patrol | Optional extension to navigate predefined waypoints after validating supervised motion and safe stopping. |
-| Obstacle Avoidance | Detect obstacles and plan appropriate movement responses. |
-| Robotic Arm | Manipulate selected objects and adjust the camera viewing angle. |
+| Forward Obstacle Stop | Use the front range sensor to stop or inhibit forward movement. |
+| Robotic Arm | Optional camera angle adjustment after hardware verification. Object pickup is future work. |
 | Event Monitoring | Capture images and timestamps when configured events are detected. |
-| Web Dashboard | Provide a web interface for monitoring robot status and event history. |
+| Web Dashboard | Optional view of event snapshots and status. Raw camera frames stay on the robot in the baseline. |
 | System Monitoring | Monitor operational information such as patrol state and battery status, subject to hardware support. |
 
 **Development note:** Feature availability will depend on hardware integration, sensor availability, software implementation, and testing results.
@@ -76,8 +76,8 @@ Its intended responsibilities include:
 - AI inference and computer vision processing.
 - Robot system coordination.
 - Processing sensor information.
-- Communication with the dashboard.
-- Supporting future ROS 2 integration.
+- Running the planned ROS 2 nodes for the Stage 3 baseline.
+- Supporting an optional dashboard for event snapshots and status.
 
 ### Robotic Platform
 
@@ -131,96 +131,25 @@ Software versions, library compatibility, and supported development environments
 
 ## System Architecture
 
-The planned system architecture consists of five major layers:
+The RDK X5 BPU runs person and object detection. Its CPU handles tracking, event rules and motion supervision using ROS 2. The actuator controller handles motor I/O and the controller watchdog. The physical stop acts on the motor drive inhibit or power cutoff independently of the RDK X5.
 
-1. **Perception Layer**
-   - Camera input.
-   - Image processing.
-   - Object and person detection.
-   - Environmental observation.
-
-2. **AI Processing Layer**
-   - AI model inference on the RDK X5.
-   - Visual information analysis.
-   - Event detection.
-
-3. **Robot Control Layer**
-   - Movement control.
-   - Supervised Mecanum motion and front obstacle stop. Waypoint patrol is optional.
-   - Obstacle response.
-   - Robotic arm control.
-
-4. **Communication Layer**
-   - Robot-to-dashboard communication.
-   - Status reporting.
-   - Event data transmission.
-
-5. **User Interface Layer**
-   - Web dashboard.
-   - Robot status monitoring.
-   - Event history.
-   - Camera viewing interface.
-
-The architecture will be refined after hardware compatibility testing and the initial software implementation.
+See the [Architecture](docs/stage2/ARCHITECTURE.md) for the data flow and interfaces.
 
 ## How It Is Expected to Work
 
-The planned operational workflow is:
+1. A nearby operator guides the robot at low speed to inspect a different viewpoint.
+2. The camera feeds onboard detection and tracking. A confirmed event saves a snapshot and timestamp locally.
+3. In the forward obstacle test, the front range sensor prompts the motion supervisor to stop or inhibit forward movement. Lateral and reverse tests use a cleared area.
 
-1. **Environment Observation:** The camera and available sensors collect environmental information.
-2. **AI Processing:** The RDK X5 processes visual information using supported AI models.
-3. **Decision Making:** The robot evaluates the detected information and determines an appropriate response.
-4. **Motion Control:** The robot follows predefined patrol points and responds to detected obstacles.
-5. **Object Interaction:** The robotic arm may be used to manipulate selected objects or adjust the camera angle.
-6. **Event Recording:** Configured events may trigger image capture and timestamp recording.
-7. **Dashboard Monitoring:** Relevant robot information and event records are intended to be displayed through a web dashboard.
+Waypoint patrol, arm-based camera adjustment, and dashboard alerts are optional extensions.
 
 ## Development Roadmap
 
-| Phase | Development Activities | Status |
-|---|---|---|
-| Phase 1 | Project concept and system planning | In Progress |
-| Phase 2 | Hardware preparation and compatibility evaluation | In Progress |
-| Phase 3 | Robot assembly and hardware integration | Planned |
-| Phase 4 | Basic motor and robotic arm control | Planned |
-| Phase 5 | Camera integration and AI vision development | Planned |
-| Phase 6 | Autonomous patrol and obstacle avoidance | Planned |
-| Phase 7 | Event monitoring and web dashboard | Planned |
-| Phase 8 | System integration, testing, and optimization | Planned |
+The [Roadmap](ROADMAP.md) lists the Stage 2 submission milestones and the Stage 3 integration, benchmark, and demo dates.
 
 ## Repository Structure
 
-The repository is intended to follow a modular structure:
-
-```text
-GuardianBot/
-│
-├── README.md
-├── GUARDIANBOT_PROJECT.md
-├── ROADMAP.md
-│
-├── docs/
-│   ├── concept/
-│   ├── architecture/
-│   ├── engineering/
-│   └── images/
-│
-├── src/
-│   ├── ai/
-│   ├── vision/
-│   ├── navigation/
-│   ├── control/
-│   ├── robotic_arm/
-│   └── dashboard/
-│
-├── models/
-├── launch/
-│
-└── evidence/
-    └── stage2/
-```
-
-The directory structure may evolve as development progresses.
+The Stage 1 report and evidence are in `stages/state 1/`. Stage 2 deliverables are in `docs/stage2/` and the root `ROADMAP.md`. The [Engineering Plan](docs/stage2/ENGINEERING_PLAN.md#planned-github-structure) lists the planned Stage 3 directories.
 
 ## Project Documentation
 
@@ -233,21 +162,11 @@ Additional project documentation will be maintained in the repository:
 - **[GUARDIANBOT_PROJECT.md](GUARDIANBOT_PROJECT.md)** — Detailed project concept, hardware inventory, planned capabilities, and engineering considerations.
 - **[ROADMAP.md](ROADMAP.md)** — Development milestones and project progress.
 - **docs/** — System architecture, engineering plans, and supporting documentation.
-- **evidence/** — Development photos, test results, and project evidence.
+- **`evidence/stage3/`** — Planned location for integration and benchmark evidence.
 
 ## Project Status
 
-**Current Stage: Hardware Preparation and System Design**
-
-Current activities:
-
-- Defining the project concept and objectives.
-- Preparing the D-Robotics RDK X5 and MasterPi hardware.
-- Planning hardware integration.
-- Designing the software architecture.
-- Evaluating the technologies required for implementation.
-
-The robot's planned capabilities will be updated as individual modules are implemented and tested.
+**Current stage: Stage 2 — Build.** The Proposal, Architecture, Engineering Plan, and Roadmap are public. Hardware details, the community post, and the Showcase PR remain to be confirmed. See the [Stage 2 checklist](docs/stage2/CHECKLIST.md) for current status.
 
 ## Developer
 

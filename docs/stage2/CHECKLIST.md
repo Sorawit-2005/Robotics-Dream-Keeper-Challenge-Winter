@@ -36,7 +36,7 @@
 
 ## 4. เผยแพร่และส่ง
 
-- [ ] เผยแพร่ Proposal, Architecture, Engineering Plan และ Roadmap ให้กรรมการเปิดได้
+- [x] เผยแพร่ Proposal, Architecture, Engineering Plan และ Roadmap ใน [GitHub สาธารณะของโปรเจกต์](https://github.com/Sorawit-2005/Robotics-Dream-Keeper-Challenge-Winter) แล้ว
 - [ ] โพสต์สรุป Stage 2 พร้อมลิงก์งานใน Discord thread ส่วนตัวและบันทึก permalink
 - [ ] อัปเดตไฟล์ Showcase เดิมของโปรเจกต์ผ่าน PR ไปยัง repo ของผู้จัด
 - [ ] ตรวจลิงก์และเก็บให้เปิดได้ตลอดช่วงตัดสิน 16–31 ธันวาคม

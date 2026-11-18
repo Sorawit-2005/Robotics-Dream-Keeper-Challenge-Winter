@@ -14,11 +14,11 @@ Quantities are for one robot. The D-Robotics and Hiwonder links identify the man
 | TT gear motors | 4 | Hiwonder MasterPi kit | Motor driver outputs. Verify rated voltage and startup current. |
 | Expansion/control board | 1 | Hiwonder MasterPi kit, Raspberry Pi version noted in inventory | Verify revision, control transport, logic levels and motor output ratings. |
 | Ultrasonic sensor | 1 planned | Hiwonder MasterPi kit | Confirm presence, revision, interface and supply before use. |
-| Arm and gripper | 1 assembly | Hiwonder MasterPi kit | Optional for demo. Verify servo voltage and channel mapping. |
+| Arm and gripper | 1 assembly | Hiwonder MasterPi kit | Optional camera angle adjustment. Confirm kit revision, joint count, servo voltage and channel mapping. |
 | Battery holder and charger | 1 each | Hiwonder MasterPi kit | Confirm cell chemistry, charger compatibility and wiring. |
 | Battery cells | 2 in inventory | Hiwonder MasterPi kit, cell labels to record | Verify cell markings, voltage and current capability. |
 | RDK power supply | 1 | D-Robotics RDK X5 compatible supply, select or confirm owned unit | USB-C 5 V / 5 A per board docs. Use separate compute power for bench tests. |
-| Physical motor stop | 1 planned | Select after verifying actuator rail | Motor drive inhibit or rated power cutoff. Verify current and accessible mounting. |
+| Physical motor stop | 1 planned | Select after verifying actuator rail | Hardware motor drive inhibit or rated power cutoff independent of RDK X5 software. Verify current and accessible mounting. |
 | Separate actuator controller and motor driver | 1 each if required | Existing compatible Raspberry Pi if available, or MCU and driver selected after verification | Prefer documented MasterPi control on supported hardware. If unavailable, select rated motor driver and verified host link. |
 | Regulator and protection | As required | Select after measuring the power budget | Separate actuator power path. Specify regulator, fuse and wiring ratings before assembly. |
 
