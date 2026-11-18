@@ -10,44 +10,28 @@
 
 ## 1. Problem Statement & Concept
 
-Conventional home security systems depend on fixed CCTV cameras that suffer from blind spots, passive recording, and continuous cloud streaming—introducing latency, bandwidth overhead, and household privacy risks. Moreover, homes with elderly residents or unsupervised living zones benefit from an active assistant capable of patrolling rooms and inspecting anomalies on the spot.
+A fixed camera covers a single viewpoint. If furniture or a corner hides part of an indoor area, a household member may need to inspect that spot in person or install another camera. Continuous video can also make it difficult to find the moment that matters.
 
-**GuardianBot** is an intelligent indoor security and monitoring robot powered by **D-Robotics RDK X5** and built upon the **MasterPi** mobile manipulator platform. The planned robot runs detection on the RDK X5 BPU and decision logic on the CPU. The baseline demo combines person/object detection and tracking with local event capture and supervised low-speed Mecanum movement with a front stop interlock. Waypoint patrol, arm-based inspection and dashboard alerts are extensions.
+**GuardianBot** is a mobile indoor inspection robot designed to give a household member a second viewpoint and a short record of what the robot saw. A nearby operator guides the MasterPi chassis at low speed. Its USB camera sends frames to the D-Robotics RDK X5, where the BPU runs person and object detection and the CPU tracks detections across frames. A configured event saves a timestamped snapshot locally. Separately, a front range sensor can stop forward motion if the path is blocked.
 
----
+The Stage 3 baseline demonstrates supervised movement, local AI and event capture, and a controlled forward stop. Waypoint patrol, arm-based camera inspection, and dashboard alerts are optional extensions.
 
 ## 2. Operating Scenario & Constraints
 
-- **Operating Environment:** Indoor residential environments (living rooms, hallways, entryways) with flat tiled or wooden floors, household furniture, and mixed natural/artificial indoor lighting.
-- **System Constraints:**
-  - **Onboard Edge Compute & Power:**
-    The RDK X5 serves as the primary onboard computing platform for AI perception, decision-making, and high-level navigation planning.
+The representative demo takes place on a level indoor floor in a clear hallway or living-room test area. A nearby operator guides the robot toward a spot outside the simulated fixed-camera view. A consenting participant appears in the camera view, allowing the robot to detect and track a person and save a local event record. In a separate test, the operator approaches a stationary test obstacle and verifies that the robot stops with clearance.
 
-    Low-level motor and servo control will be handled by the MasterPi controller or a compatible external microcontroller.
-
-    All critical AI processing will operate locally without requiring continuous cloud connectivity.
-
-  - **Privacy-First Design:** Raw video feeds remain strictly on-device; only event-triggered snapshots and status summaries are transmitted to the user dashboard/notification channel.
-
-- **Hardware Safety & Payload Limits:**
-  The MasterPi arm with gripper is an optional extension for camera angle adjustment. Confirm the kit revision and joint count before recording the arm specification.
-
-Arm movement and payload limits will be determined through hardware testing before autonomous operation.
-
-- **Incremental Navigation Scope:** The Stage 3 baseline focuses on supervised Mecanum motion and a front range stop. Calibrated waypoint patrol is an extension. Full LiDAR SLAM is future work.
-
----
+- **Operating area:** Use a dry, flat floor under suitable indoor lighting. Verify wheel clearance and keep people clear of the robot's motion path.
+- **Movement:** Forward approach is the obstacle-stop test. Test lateral or reverse movement separately in a cleared area because the front range sensor covers the forward direction.
+- **Privacy:** Process raw frames on the robot. Keep event snapshots and metadata local for the baseline demo. Person detection identifies a class, without identifying individuals.
+- **Hardware readiness:** Enable drive only after verifying the controller, front range sensor, power supply, and stop behavior. The arm stays out of the baseline scope.
 
 ## 3. Intended Users & Interaction Model
 
-- **Primary Users:**
-  1. **Working Adults & Family Caregivers:** Users away from home who need real-time anomaly alerts, event snapshots, and remote status visibility.
-  2. **Elderly Residents & Household Members:** Occupants who need non-intrusive indoor safety monitoring without continuous cloud surveillance.
-- **Interaction Model:**
-  - **Autonomous Waypoint Patrol (extension):** GuardianBot navigates between predefined checkpoints (e.g., entrance, living room) to inspect surroundings.
-  - **Active Multi-Angle Inspection (extension):** Upon detecting an object or region of interest, the robotic arm adjusts the camera
-    position and viewing angle to capture a clearer viewpoint.
-  - **Event-Driven Recording & Alerts:** When an anomaly rule triggers (e.g., person detected in a restricted zone or path obstruction), the robot halts safely, logs evidence locally, and records a timestamped snapshot. A user dashboard and remote alerts are extensions.
+The primary user is a household member or family caregiver who wants to check a specific indoor area and review a record of what the robot saw. The baseline interaction assumes the user is present and can stop the robot. Remote review is an optional extension.
+
+1. The operator enables drive in a cleared area and guides GuardianBot toward the inspection point.
+2. The operator observes the robot while it runs detection and tracking. A configured rule can confirm an event when a target class, such as a person, is consistently detected across frames.
+3. After the inspection, the operator reviews the saved snapshot and timestamp. If the robot encounters a blocked forward path or a range fault, the motion supervisor stops or inhibits forward movement. The operator checks the area before continuing.
 
 ## 4. Hardware Compatibility & Power Architecture
 
@@ -84,54 +68,31 @@ All power connections will be verified before hardware integration.
   - **Optional waypoint patrol:** Once supervised movement and the stop interlock pass testing, evaluate autonomous travel between marked indoor checkpoints. Use calibrated odometry or another validated position estimate for control, and measure the final stop position against a floor reference. Pause patrol if the position estimate becomes unreliable or the path is blocked.
   - **Future work:** LiDAR SLAM and autonomous map generation.
 
-## 6. Project Scope – MVP กับ Future Development
+## 6. Project Scope
 
-| Development Priority | Features                                                      |
-| :------------------- | :------------------------------------------------------------ |
-| **MVP**              | Person/Object Detection and Tracking, Local Event Logging, Supervised Mecanum Movement and Front Range Stop |
-| **Advanced**         | Waypoint Patrol, Camera Inspection, Dashboard, Remote Notification               |
-| **Future Expansion** | Object Pickup, Advanced Localization, Fall Detection          |
+| Priority | Features |
+| --- | --- |
+| Stage 3 baseline | Onboard person and selected object detection, tracking, local event logging, supervised Mecanum movement, and front obstacle stop |
+| Optional extensions | Autonomous waypoint patrol, arm-based camera angle adjustment, dashboard, and remote notifications |
+| Future work | Object pickup, LiDAR SLAM, and fall detection |
 
----
+## 7. Core Capabilities
 
-## 7. Core Capabilities (Perception – Decision – Actuation)
-
-- **Perception (Sense):**
-  - Real-time person detection, object recognition, and object tracking using the Stage 1 USB camera. The MasterPi camera is an alternative after interface verification.
-
-  - Front obstacle detection using the onboard ultrasonic sensor, combined with visual obstacle information where supported.
-
-- **Decision (Think):**
-  - The ROS 2 supervisor handles operator commands, the front stop interlock, and event filtering. Waypoint sequencing is added only if the optional patrol is validated.
-- **Actuation (Act):**
-
-  - **Omnidirectional Mobility:**
-    Four-wheel Mecanum chassis driven by four TT motors for forward, backward, lateral, and rotational movement.
-
-  - **Robotic Manipulation:**
-    MasterPi arm with gripper for optional camera adjustment after verifying limits. Object pickup is future work.
-
-  - **Safety Control:**
-    Controlled motor stopping and obstacle-aware movement.
-
-  - **Monitoring & Alerting:**
-    Local evidence capture, event logging, and status reporting to the dashboard.
-
----
+| Capability | What GuardianBot does in the baseline |
+| --- | --- |
+| Perception | The Stage 1 USB camera provides frames for detection and tracking. The planned front range sensor reports distance ahead once its interface has been verified. |
+| Decision | The RDK X5 confirms configured events from tracked detections. It separately checks that drive is enabled and that the forward path and range data meet the motion rules. A detected person can trigger a record. A blocked forward path triggers a stop. |
+| Actuation | The verified motor controller drives the four Mecanum wheels within the tested speed limit and stops forward movement when requested by the supervisor. The event logger saves the matching snapshot and metadata locally. |
 
 ## 8. Innovation Compared with a Stock Demo
 
-Unlike a standard stationary object-detection demo, GuardianBot combines **Edge AI, omnidirectional mobility, and optional articulated camera inspection** into a unified home robotics system:
+GuardianBot takes the detector beyond drawing boxes on a live image. The operator can bring the camera to a different viewpoint using the Mecanum chassis. On-device detection and tracking turn a sustained observation into a timestamped record the operator can review after the inspection. The front range sensor serves a separate purpose by protecting forward movement while the robot changes viewpoints.
 
-1. **Active Camera Re-orientation:** The extension uses the MasterPi arm as an articulated camera positioning mechanism to inspect blind spots and verify anomalies from different viewing angles.
-2. **Holonomic Indoor Maneuverability:** Mecanum wheels enable lateral strafing and zero-radius turning around household furniture where differential-drive robots struggle.
-3. **Closed-Loop Edge Privacy:** Keeps continuous inference on the RDK X5 BPU while linking visual detections directly to physical motion control and evidence logging.
-
----
+The distinguishing contribution is the integration of mobile inspection, on-device AI, local event capture, and controlled stopping in one indoor workflow. If validated later, waypoint patrol and arm-based camera adjustment can extend how the robot reaches and inspects a viewpoint.
 
 ## 9. Measurable Success Targets (KPIs)
 
-These are Stage 3 test targets. Record the actual results and test conditions after running the system.
+The demo should show a complete local event record for a configured detection and a separate forward obstacle test ending in a controlled stop. The numbers below are Stage 3 test targets. Record the measured values and test conditions after running the system.
 
 ### Baseline demo
 
