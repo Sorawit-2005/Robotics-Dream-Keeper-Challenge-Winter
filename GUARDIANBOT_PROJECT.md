@@ -61,7 +61,7 @@ GuardianBot can navigate to predefined inspection checkpoints.
 * Halt when an unsafe situation is encountered.
 * Report operational status.
 
-> **Note:** The initial version focuses on Waypoint Patrol, while SLAM (Simultaneous Localization and Mapping) and autonomous map generation will be considered for future development phases.
+> **Stage 3 scope:** The baseline uses supervised low-speed Mecanum motion and a front obstacle stop. Autonomous waypoint patrol is an optional extension after motion, safe stopping, and position estimation are validated. SLAM and map generation are future work.
 
 ### 2.3 Obstacle Avoidance
 Uses a Distance Sensor and visual data from the camera to inspect areas in front of or around the robot.
@@ -143,7 +143,7 @@ flowchart TD
 
 ### 3.3 Example Working Scenario
 **Example:** GuardianBot detects an anomalous object indoors.
-1. The robot navigates to an inspection waypoint.
+1. In the optional patrol mode, the robot navigates to an inspection waypoint.
 2. The camera captures images of the environment.
 3. The RDK X5 processes the image feed using AI.
 4. The system detects an object requiring inspection.

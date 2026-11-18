@@ -37,6 +37,11 @@ The log identifies the runtime as CPU on aarch64 and reports roughly 1.6 seconds
 - [YOLO detection output](Challenge%203%20%E2%80%94%20First%20AI%20Task/yolov8n_detection_result.jpg.png)
 - [YOLO command and runtime log](Challenge%203%20%E2%80%94%20First%20AI%20Task/yolov8n_terminal_log.jpg.png)
 
+## When the board is available again
+
+- The original successful flash screen was not captured. Look for a log from the original tool and record the tool and image used. If no log remains, ask the organizers whether the boot and SSH evidence can be accepted as an alternative.
+- From the RDK X5 SSH session, run `hostname` and `curl -I --max-time 15 https://github.com`. Capture the terminal response from GitHub with the SSH session visible. Save it with the Challenge 1 evidence.
+
 ## Submission checklist
 
 - [x] Collect evidence for active SSH, a working USB camera, and one AI workload.

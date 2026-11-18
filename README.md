@@ -54,7 +54,7 @@ The following features are planned for development:
 | Feature | Description |
 |---|---|
 | AI Vision | Use computer vision and AI models to detect people and objects. |
-| Autonomous Patrol | Navigate predefined patrol points (waypoints). |
+| Autonomous Patrol | Optional extension to navigate predefined waypoints after validating supervised motion and safe stopping. |
 | Obstacle Avoidance | Detect obstacles and plan appropriate movement responses. |
 | Robotic Arm | Manipulate selected objects and adjust the camera viewing angle. |
 | Event Monitoring | Capture images and timestamps when configured events are detected. |
@@ -146,7 +146,7 @@ The planned system architecture consists of five major layers:
 
 3. **Robot Control Layer**
    - Movement control.
-   - Waypoint patrol.
+   - Supervised Mecanum motion and front obstacle stop. Waypoint patrol is optional.
    - Obstacle response.
    - Robotic arm control.
 
@@ -224,8 +224,9 @@ The directory structure may evolve as development progresses.
 
 ## Project Documentation
 
-- **[- **[Stage 1 Report](stages/state%201/STAGE1_IGNITE.md)** — Board bring-up, camera test, and YOLO evidence.
-Stage 2 Checklist](docs/stage2/CHECKLIST.md)** — Task checklist, current progress, and proposed repository layout.
+- **[Stage 1 Report](stages/state%201/STAGE1_IGNITE.md)** — Board bring-up, camera test, and YOLO evidence.
+- **[Stage 2 Proposal](docs/stage2/PROJECT_PROPOSAL.md)** · [Architecture](docs/stage2/ARCHITECTURE.md) · [Engineering Plan](docs/stage2/ENGINEERING_PLAN.md)
+- **[Stage 2 Checklist](docs/stage2/CHECKLIST.md)** — Task checklist, current progress, and proposed repository layout.
 
 Additional project documentation will be maintained in the repository:
 

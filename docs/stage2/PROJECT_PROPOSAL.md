@@ -12,7 +12,7 @@
 
 Conventional home security systems depend on fixed CCTV cameras that suffer from blind spots, passive recording, and continuous cloud streaming—introducing latency, bandwidth overhead, and household privacy risks. Moreover, homes with elderly residents or unsupervised living zones benefit from an active assistant capable of patrolling rooms and inspecting anomalies on the spot.
 
-**GuardianBot** is an intelligent indoor security and monitoring robot powered by **D-Robotics RDK X5** and built upon the **MasterPi** mobile manipulator platform. By running computer vision and decision-making locally on the RDK X5 BPU (Edge AI), GuardianBot autonomously patrols designated home waypoints, avoids obstacles using omnidirectional Mecanum wheels, adjusts its camera angle or handles authorized lightweight objects via a 4-DOF robotic arm with gripper, and sends real-time alerts with visual evidence when predefined events occur.
+**GuardianBot** is an intelligent indoor security and monitoring robot powered by **D-Robotics RDK X5** and built upon the **MasterPi** mobile manipulator platform. The planned robot runs detection on the RDK X5 BPU and decision logic on the CPU. The baseline demo combines person/object detection and tracking with local event capture and supervised low-speed Mecanum movement with a front stop interlock. Waypoint patrol, arm-based inspection and dashboard alerts are extensions.
 
 ---
 
@@ -21,7 +21,7 @@ Conventional home security systems depend on fixed CCTV cameras that suffer from
 - **Operating Environment:** Indoor residential environments (living rooms, hallways, entryways) with flat tiled or wooden floors, household furniture, and mixed natural/artificial indoor lighting.
 - **System Constraints:**
   - **Onboard Edge Compute & Power:**
-    The RDK X5 serves as the primary onboard computing platform for AI perception,decision-making, and high-level navigation planning.
+    The RDK X5 serves as the primary onboard computing platform for AI perception, decision-making, and high-level navigation planning.
 
     Low-level motor and servo control will be handled by the MasterPi controller or a compatible external microcontroller.
 
@@ -30,11 +30,11 @@ Conventional home security systems depend on fixed CCTV cameras that suffer from
   - **Privacy-First Design:** Raw video feeds remain strictly on-device; only event-triggered snapshots and status summaries are transmitted to the user dashboard/notification channel.
 
 - **Hardware Safety & Payload Limits:**
-  The MasterPi 4-DOF robotic arm with gripper will be used for camera angle adjustment and lightweight object manipulation.
+  The MasterPi arm with gripper is an optional extension for camera angle adjustment. Confirm the kit revision and joint count before recording the arm specification.
 
 Arm movement and payload limits will be determined through hardware testing before autonomous operation.
 
-- **Incremental Navigation Scope:** Stage 2/3 MVP focuses on calibrated waypoint patrol and ultrasonic/vision obstacle avoidance; full LiDAR SLAM is planned as a future expansion.
+- **Incremental Navigation Scope:** The Stage 3 baseline focuses on supervised Mecanum motion and a front range stop. Calibrated waypoint patrol is an extension. Full LiDAR SLAM is future work.
 
 ---
 
@@ -44,10 +44,10 @@ Arm movement and payload limits will be determined through hardware testing befo
   1. **Working Adults & Family Caregivers:** Users away from home who need real-time anomaly alerts, event snapshots, and remote status visibility.
   2. **Elderly Residents & Household Members:** Occupants who need non-intrusive indoor safety monitoring without continuous cloud surveillance.
 - **Interaction Model:**
-  - **Autonomous Waypoint Patrol:** GuardianBot navigates between predefined checkpoints (e.g., entrance, living room) to inspect surroundings.
-  - **Active Multi-Angle Inspection:** Upon detecting an object or region of interest, the 4-DOF robotic arm adjusts the camera
+  - **Autonomous Waypoint Patrol (extension):** GuardianBot navigates between predefined checkpoints (e.g., entrance, living room) to inspect surroundings.
+  - **Active Multi-Angle Inspection (extension):** Upon detecting an object or region of interest, the robotic arm adjusts the camera
     position and viewing angle to capture a clearer viewpoint.
-  - **Event-Driven Dashboard & Alerts:** When an anomaly rule triggers (e.g., person detected in a restricted zone or path obstruction), the robot halts safely, logs evidence locally, and pushes an alert with timestamped imagery to the user.
+  - **Event-Driven Recording & Alerts:** When an anomaly rule triggers (e.g., person detected in a restricted zone or path obstruction), the robot halts safely, logs evidence locally, and records a timestamped snapshot. A user dashboard and remote alerts are extensions.
 
 ## 4. Hardware Compatibility & Power Architecture
 
@@ -80,22 +80,16 @@ All power connections will be verified before hardware integration.
 
   **Navigation Strategy**
 
-  The initial navigation system will use a controlled waypoint-based approach.
-  The initial navigation system will use calibrated motion commands and available sensor feedback.
-
-Wheel encoder-based odometry will be evaluated as an additional hardware requirement to improve movement estimation and waypoint accuracy.
-
-Until reliable localization is available, waypoint patrol will operate within a controlled and calibrated test environment.
-Obstacle detection will use ultrasonic sensing and camera-based perception.
-Advanced localization and LiDAR-based SLAM will be considered for future development after the MVP is validated.
+  - **Stage 3 baseline:** The operator drives the robot at low speed in a controlled indoor area. The front range sensor can stop forward motion when an obstacle blocks the path.
+  - **Optional waypoint patrol:** Once supervised movement and the stop interlock pass testing, evaluate autonomous travel between marked indoor checkpoints. Use calibrated odometry or another validated position estimate for control, and measure the final stop position against a floor reference. Pause patrol if the position estimate becomes unreliable or the path is blocked.
+  - **Future work:** LiDAR SLAM and autonomous map generation.
 
 ## 6. Project Scope – MVP กับ Future Development
 
 | Development Priority | Features                                                      |
 | :------------------- | :------------------------------------------------------------ |
-| **MVP**              | AI Person Detection, Object Detection, Basic Mecanum Movement |
-| **Core Features**    | Obstacle Detection, Event Logging, Camera Inspection          |
-| **Advanced**         | Waypoint Patrol, Dashboard, Remote Notification               |
+| **MVP**              | Person/Object Detection and Tracking, Local Event Logging, Supervised Mecanum Movement and Front Range Stop |
+| **Advanced**         | Waypoint Patrol, Camera Inspection, Dashboard, Remote Notification               |
 | **Future Expansion** | Object Pickup, Advanced Localization, Fall Detection          |
 
 ---
@@ -103,19 +97,19 @@ Advanced localization and LiDAR-based SLAM will be considered for future develop
 ## 7. Core Capabilities (Perception – Decision – Actuation)
 
 - **Perception (Sense):**
-  - Real-time person detection, object recognition, and object tracking using the MasterPi camera (480P), subject to verified interface compatibility with the RDK X5.
+  - Real-time person detection, object recognition, and object tracking using the Stage 1 USB camera. The MasterPi camera is an alternative after interface verification.
 
-* Front obstacle detection using the onboard ultrasonic sensor, combined with visual obstacle information where supported.
+  - Front obstacle detection using the onboard ultrasonic sensor, combined with visual obstacle information where supported.
 
 - **Decision (Think):**
-  - ROS 2-based finite state machine managing waypoint patrol sequences, obstacle avoidance behaviors, event filtering, and safety interlocks.
-- - **Actuation (Act):**
+  - The ROS 2 supervisor handles operator commands, the front stop interlock, and event filtering. Waypoint sequencing is added only if the optional patrol is validated.
+- **Actuation (Act):**
 
   - **Omnidirectional Mobility:**
     Four-wheel Mecanum chassis driven by four TT motors for forward, backward, lateral, and rotational movement.
 
   - **Robotic Manipulation:**
-    MasterPi 4-DOF robotic arm with gripper for camera angle adjustment and lightweight object manipulation.
+    MasterPi arm with gripper for optional camera adjustment after verifying limits. Object pickup is future work.
 
   - **Safety Control:**
     Controlled motor stopping and obstacle-aware movement.
@@ -127,9 +121,9 @@ Advanced localization and LiDAR-based SLAM will be considered for future develop
 
 ## 8. Innovation Compared with a Stock Demo
 
-Unlike a standard stationary object-detection demo, GuardianBot combines **Edge AI, omnidirectional mobility,and articulated camera inspection** into a unified home robotics system:
+Unlike a standard stationary object-detection demo, GuardianBot combines **Edge AI, omnidirectional mobility, and optional articulated camera inspection** into a unified home robotics system:
 
-1. **Active Camera Re-orientation:** Uses the MasterPi 4-DOF robotic arm with gripper as an articulated camera positioning mechanism to inspect blind spots and verify anomalies from different viewing angles.
+1. **Active Camera Re-orientation:** The extension uses the MasterPi arm as an articulated camera positioning mechanism to inspect blind spots and verify anomalies from different viewing angles.
 2. **Holonomic Indoor Maneuverability:** Mecanum wheels enable lateral strafing and zero-radius turning around household furniture where differential-drive robots struggle.
 3. **Closed-Loop Edge Privacy:** Keeps continuous inference on the RDK X5 BPU while linking visual detections directly to physical motion control and evidence logging.
 
@@ -137,14 +131,23 @@ Unlike a standard stationary object-detection demo, GuardianBot combines **Edge 
 
 ## 9. Measurable Success Targets (KPIs)
 
-To evaluate system performance in Stage 3, GuardianBot targets the following measurable engineering benchmarks:
+These are Stage 3 test targets. Record the actual results and test conditions after running the system.
 
-| Metric                          | Target              | Evaluation & Measurement Protocol                                                                                                                                                                                     |
-| :------------------------------ | :------------------ | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **AI Inference Frame Rate**     | $ge 25text{ FPS}$ | Measured end-to-end (including image preprocessing, BPU inference, and post-processing) on RDK X5 running a quantized YOLO model (e.g., YOLOv8n/YOLOv5s `.bin`) at $640 times 480$ resolution.                       |
-| **Minimum Obstacle Clearance**  | $ge 20text{ cm}$  | Measured from the closest physical point of the robot chassis to the obstacle after coming to a complete stop, tested at a standard patrol speed of $0.2text{ m/s}$.                                                 |
-| **Local Event Logging Latency** | $< 500text{ ms}$   | Elapsed time from the moment an anomaly event is confirmed by the decision node to the completion of local storage write (annotated snapshot + timestamped metadata).                                                 |
-| **Dashboard Alert Latency**     | $< 3text{ s}$      | Elapsed time from local event confirmation to alert notification receipt on the user dashboard under stable local Wi-Fi network conditions.                                                                           |
-| **Detection Precision**         | $ge 85%$          | Evaluated on an independent, unseen indoor Ground Truth test dataset (separate from training/tuning data), logged separately per target class (`person` and target objects).                                          |
-| **Detection Recall**            | $ge 85%$          | Evaluated on the same independent indoor Ground Truth test dataset, logged separately per target class (`person` and target objects).                                                                                 |
-| **Waypoint Patrol Completion**  | $ge 90%$          | Achieving at least $27/30$ target waypoints across indoor test runs; a waypoint succeeds when the robot stops within a $pm 20text{ cm}$ position tolerance supported by calibrated odometry/localization reference. |
+### Baseline demo
+
+| Metric | Target | How to measure |
+| --- | ---: | --- |
+| AI throughput | ≥ 25 FPS | Count processed frames per second through preprocessing, BPU inference, and postprocessing. Capture at 640 × 480 and record the model input size separately. |
+| Obstacle clearance after stopping | ≥ 20 cm | Measure from the nearest point on the chassis to the obstacle at a full stop. Begin at low speed and test up to 0.2 m/s after validating safe stops. |
+| Local event logging latency | < 500 ms | Time from event confirmation until the snapshot and timestamped metadata are written locally. |
+| Detection precision | ≥ 85% | Evaluate per target class on held-out labeled indoor scenes. |
+| Detection recall | ≥ 85% | Evaluate per target class on the same held-out scenes. |
+
+For precision and recall, use an IoU threshold of 0.50 and fix the confidence threshold before evaluation. Record both thresholds with the results.
+
+### Optional extensions
+
+| Metric | Target | How to measure |
+| --- | ---: | --- |
+| Waypoint patrol success | ≥ 90% (at least 27 of 30 attempts) | Count an attempt as successful if the robot stops within 20 cm of the marked waypoint. Measure distance on the floor independently of the robot's own position estimate. |
+| Dashboard alert latency | < 3 s | Measure from local event confirmation to receipt in the dashboard over stable local Wi-Fi. |
