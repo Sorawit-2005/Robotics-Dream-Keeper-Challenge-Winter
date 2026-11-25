@@ -41,7 +41,7 @@ Autonomous waypoint patrol is an optional extension after validating supervised 
 - **BPU on RDK X5** runs quantized YOLO inference. Start with the official YOLO example and select the model artifact and runtime that match the installed RDK image. Record the actual model input shape separately from USB capture resolution.
 - **CPU on RDK X5** handles capture, preprocessing, decoding, tracking, ROS 2, event decisions, local storage, and motor command supervision. Detection and tracking run in separate ROS 2 nodes. Bound queues so delayed frames cannot accumulate.
 - **Actuator controller** runs motor I/O, the stop watchdog, and sensor acquisition as appropriate. This keeps the stop behavior available when the host or link fails. The physical stop independently inhibits motor drive.
-- **Off-board** no cloud compute or operator laptop is required to enforce a stop. An operator laptop can send commands or view status locally. A separate Pi controller is an option if required by the MasterPi board.
+- **Off-board** no cloud compute or operator laptop is required to enforce a stop. An operator laptop can send commands or view status locally. The installed Raspberry Pi with the TurboPi-marked expansion board is the first chassis controller candidate. Its link to the RDK X5 and stop behavior are pending validation.
 
 ## ROS 2 node graph
 

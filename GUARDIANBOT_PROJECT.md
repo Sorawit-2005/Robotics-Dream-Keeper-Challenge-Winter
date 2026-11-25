@@ -100,8 +100,8 @@ MasterPi serves as the mechanical base for mobility and object manipulation.
 * 4x TT Motors
 * Robotic arm and gripper (revision and joint count pending confirmation)
 * Stage 1 USB camera for the baseline; kit camera compatibility pending
-* Front ultrasonic sensor planned; kit sensor presence and interface pending
-* Expansion Board
+* Apparent front ultrasonic module installed; exact model, wiring, and operation pending confirmation
+* Raspberry Pi chassis host and expansion board marked TurboPi; revisions pending
 * Battery System
 
 ### 4.3 Hardware Integration Concept
@@ -121,7 +121,7 @@ The project currently has two primary hardware sets available: **RDK X5** and **
 | :--- | :--- | :---: | :--- |
 | 1 | MasterPi Robotic Arm (Pre-assembled) | 1 | Pick up objects and adjust camera angles |
 | 2 | Chassis Brackets | 2 | Mount and support the robot frame |
-| 3 | Expansion Board for Raspberry Pi 5 | 1 | Connect and control peripherals |
+| 3 | Hiwonder expansion board marked TurboPi | 1 | Connect and control peripherals |
 | 4 | Battery Box | 1 | House the batteries |
 | 5 | Structural Blocks ($3 \times 3$ cm) | 3 | Structural assembly components |
 | 6 | Mecanum Wheels | 4 | Enable omnidirectional movement |
@@ -133,6 +133,7 @@ The project currently has two primary hardware sets available: **RDK X5** and **
 | 12 | Phillips Screwdriver | 1 | Assembly and maintenance |
 | 13 | Nuts and Screws Set | 1 set | Fasten components |
 | 14 | MicroSD Card Reader | 1 | Read and manage MicroSD cards |
+| 15 | Raspberry Pi chassis host | 1 | Candidate host for the existing drive and sensor interfaces |
 
 **B. D-Robotics RDK X5**
 

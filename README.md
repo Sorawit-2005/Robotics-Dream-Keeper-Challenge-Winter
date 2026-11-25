@@ -91,7 +91,7 @@ The available kit includes:
 |---:|---|---:|
 | 1 | MasterPi Robotic Arm | 1 |
 | 2 | Chassis Mounting Brackets | 2 |
-| 3 | Raspberry Pi 5 Expansion Board | 1 |
+| 3 | Hiwonder expansion board marked TurboPi | 1 |
 | 4 | Battery Holder | 1 |
 | 5 | 3 cm × 3 cm Blocks | 3 |
 | 6 | Mecanum Wheels | 4 |
@@ -106,7 +106,7 @@ The available kit includes:
 
 **Important hardware integration consideration**
 
-The MasterPi expansion board is designed for Raspberry Pi 5. Its compatibility with the D-Robotics RDK X5 has not yet been confirmed.
+The assembled chassis has a Raspberry Pi under an expansion board marked TurboPi. The exact board revisions and host link to the RDK X5 are pending verification. See the [port inventory](docs/stage2/ENGINEERING_PLAN.md#port-inventory).
 
 Before connecting the hardware, the project will evaluate GPIO pin mapping, voltage levels, motor control interfaces, servo control, communication interfaces, and power requirements.
 

@@ -42,7 +42,7 @@ The primary user is a household member or family caregiver who wants to check a 
   - Direct compatibility with the RDK X5 has not yet been confirmed.
 
 - Hardware interfaces and control protocols will be inspected before integration.
-- If direct compatibility is not possible, a compatible external microcontroller will be used.
+- The first integration option is to retain the installed Raspberry Pi and TurboPi-marked expansion board for chassis I/O, with a verified link to the RDK X5. A compatible external controller is the fallback.
 
 - **Power Distribution Design**
   The power system will provide separate regulated power paths for the computing platform and high-current actuators.
